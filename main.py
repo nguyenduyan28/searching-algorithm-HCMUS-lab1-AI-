@@ -112,28 +112,28 @@ def ucs(arr, source, destination):
   # TODO
   pqueue = []
   path = []
-  visited = set()
+  visited = {}
   pqueue.append((0, source))
   cost_min = {source : 0}
   while(pqueue):
     pqueue = sorted(pqueue)
-    print(pqueue)
     value, curNode = pqueue.pop(0)
-    if (curNode in visited):
-      continue
-    visited.add(curNode)
-    path.append(curNode)
     if (curNode == destination):
+      while curNode != source:
+        path.append(curNode)
+        curNode = visited[curNode]
+      path.append(source)
+      path.reverse()
       return visited, path
     for neighbor in range(len((arr[curNode]))):
       curCost = arr[curNode][neighbor]
       if (curCost > 0 and neighbor not in visited):
         newCost = curCost + value
-        print(neighbor, ":", curCost)
         if (neighbor not in cost_min or newCost < cost_min[neighbor]):
           # update
           cost_min[neighbor] = newCost
           pqueue.append((newCost, neighbor))
+          visited[neighbor] = curNode
 
   return visited, path
 
@@ -318,8 +318,8 @@ if __name__ == "__main__":
   num, source, goal,  arr, heuristic = readInput("input.txt")
   # TODO: Start measuring
   # TODO: Call a function to execute the path finding process
-  print(bfs(arr, source, goal))
-  print(dfs(arr, source, goal))
+  # print(bfs(arr, source, goal))
+  # print(dfs(arr, source, goal))
   print(ucs(arr, source, goal))
   # TODO: Stop measuring 
 
