@@ -188,7 +188,7 @@ def dls(arr, source, destination, depth_limit):
 
 
 # 1.4.b. IDS
-def ids(arr, source, destination):
+def ids(arr, source, destination, depth_limit):
   """
   IDS algorithm:
   Parameters:
@@ -212,9 +212,10 @@ def ids(arr, source, destination):
 
   path = []
   visited = {}
-
-  return visited, path
-
+  for limit in range(depth_limit):
+    if (dls(arr, source, destination, limit)[0] == True):
+      return dls(arr, source, destination, limit)
+  return False, []
 
 # 1.5. Greedy best first search (GBFS)
 def gbfs(arr, source, destination, heuristic):
@@ -339,6 +340,7 @@ if __name__ == "__main__":
   print(dfs(arr, source, goal))
   print(ucs(arr, source, goal))
   print(dls(arr, source, goal, 2))
+  print(ids(arr, source, goal, 10))
   # TODO: Stop measuring 
 
   # TODO: Show the output data
