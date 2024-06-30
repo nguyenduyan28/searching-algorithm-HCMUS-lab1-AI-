@@ -7,6 +7,16 @@ from collections import deque, defaultdict
 # 1.1. Breadth-first search (BFS)
 def myfunc(a):
     return a & (a & 1)
+def outputPath(source, visited, goal):
+  path = []
+  while (visited[goal] != source):
+    path.append(goal)
+    goal = visited[goal]
+  path.append(source)
+  path.reverse()
+  return path
+
+
 def bfs(arr, source, destination):
   """
   BFS algorithm:
@@ -30,20 +40,19 @@ def bfs(arr, source, destination):
   # TODO
   'arr[i][j] = path from i -- j'
   path = []
-  visited = set()
+  visited = {}
   queue = []
   queue.append(source)
-  visited.add(source)
   while (queue):
     curNode = queue.pop(0)
     path.append(curNode)
     if (curNode == destination):
-      return visited, path
+      return True, outputPath(source, visited, destination)
     for i in range(len(arr[curNode])):
       if (i not in visited and arr[curNode][i] !=  0):
         queue.append(i)
-        visited.add(i)
-  return -1
+        visited[i] = curNode
+  return -1, []
 
 
 # 1.2. Depth-first search (DFS)
@@ -71,20 +80,18 @@ def dfs(arr, source, destination):
 
   path = []
   visited = {}
-  visited = set()
   stack = []
   stack.append(source)
-  visited.add(source)
   while (stack):
     curNode = stack.pop()
     path.append(curNode)
     if (curNode == destination):
-      return visited, path
+      return True, outputPath(source, visited, destination)
     for i in range(len(arr[curNode])):
       if (i not in visited and arr[curNode][i] !=  0):
         stack.append(i)
-        visited.add(i)
-  return -1
+        visited[i] = curNode
+  return -1, []
 
 
 
@@ -119,12 +126,7 @@ def ucs(arr, source, destination):
     pqueue = sorted(pqueue)
     value, curNode = pqueue.pop(0)
     if (curNode == destination):
-      while curNode != source:
-        path.append(curNode)
-        curNode = visited[curNode]
-      path.append(source)
-      path.reverse()
-      return visited, path
+      return True, outputPath(source, visited, destination)
     for neighbor in range(len((arr[curNode]))):
       curCost = arr[curNode][neighbor]
       if (curCost > 0 and neighbor not in visited):
@@ -135,7 +137,7 @@ def ucs(arr, source, destination):
           pqueue.append((newCost, neighbor))
           visited[neighbor] = curNode
 
-  return visited, path
+  return -1, []
 
 
 # 1.4. Iterative deepening search (IDS)
@@ -318,8 +320,8 @@ if __name__ == "__main__":
   num, source, goal,  arr, heuristic = readInput("input.txt")
   # TODO: Start measuring
   # TODO: Call a function to execute the path finding process
-  # print(bfs(arr, source, goal))
-  # print(dfs(arr, source, goal))
+  print(bfs(arr, source, goal))
+  print(dfs(arr, source, goal))
   print(ucs(arr, source, goal))
   # TODO: Stop measuring 
 
