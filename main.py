@@ -168,8 +168,23 @@ def dls(arr, source, destination, depth_limit):
 
   path = []
   visited = {}
-
-  return visited, path
+  stack = []
+  stack.append((0, source))
+  depth = 0
+  while (stack):
+    if (depth <= depth_limit):
+      value,  curNode = stack.pop()
+      if (curNode == destination):
+       return True,  outputPath(source, visited, destination)
+      for neighbor in range(len(arr[curNode])):
+        if (arr[curNode][neighbor] != 0 and neighbor not in visited):
+          stack.append((arr[curNode][neighbor], neighbor))
+          visited[neighbor] = curNode
+      depth += 1
+    else:
+      return False, []
+  
+  return False, []
 
 
 # 1.4.b. IDS
@@ -323,6 +338,7 @@ if __name__ == "__main__":
   print(bfs(arr, source, goal))
   print(dfs(arr, source, goal))
   print(ucs(arr, source, goal))
+  print(dls(arr, source, goal, 2))
   # TODO: Stop measuring 
 
   # TODO: Show the output data
