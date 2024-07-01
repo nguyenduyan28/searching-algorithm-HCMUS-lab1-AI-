@@ -2,6 +2,7 @@
 import heapq 
 import time
 import tracemalloc
+import random
 from collections import deque, defaultdict
 # 1. Search Strategies Implementation
 # 1.1. Breadth-first search (BFS)
@@ -9,7 +10,7 @@ def myfunc(a):
     return a & (a & 1)
 def outputPath(source, visited, goal):
   path = []
-  while (visited[goal] != source):
+  while (goal != source):
     path.append(goal)
     goal = visited[goal]
   path.append(source)
@@ -241,12 +242,22 @@ def gbfs(arr, source, destination, heuristic):
       Founded path
   """
   # TODO
-
+  pqueue = [] 
   path = []
-  visited = {}
-
-  return visited, path
-
+  visited = {source : 0}
+  print(heuristic)
+  pqueue.append((heuristic[source], source))
+  while(pqueue):
+    pqueue = sorted(pqueue)
+    print(pqueue)
+    value, curNode = pqueue.pop(0)
+    if (curNode == destination):
+      return True, outputPath(source, visited, destination)
+    for neighbor in range(len(arr[curNode])):
+      if (arr[curNode][neighbor] != 0 and neighbor not in visited):
+        pqueue.append((heuristic[neighbor], neighbor))
+        visited[neighbor] = curNode
+  return False, []
 
 # 1.6. Graph-search A* (AStar)
 def astar(arr, source, destination, heuristic):
@@ -274,9 +285,27 @@ def astar(arr, source, destination, heuristic):
   # TODO
 
   path = []
-  visited = {}
+  visited = {source : 0}
+  cost_min = {source: 0}
+  pqueue = [(heuristic[source], source)]
+  while(pqueue):
+    pqueue = sorted(pqueue)
+    curCost, curNode = pqueue.pop(0)
+    print(curNode)
+    if (curNode == destination):
+      return True, outputPath(source, visited, destination)
+    print(arr[curNode])
+    print(visited)
+    for neighbor in range(len(arr[curNode])):
+      if (neighbor not in visited and arr[curNode][neighbor] != 0):
+        newCost = curCost + arr[curNode][neighbor]
+        if (neighbor not in pqueue  or (newCost < cost_min[neighbor] and neighbor in pqueue)):
+          pqueue.append((arr[curNode][neighbor] + heuristic[neighbor], neighbor))
+          cost_min[neighbor] = newCost
+          visited[neighbor] = curNode
+  return False, []
 
-  return visited, path
+
 
 
 # 1.7. Hill-climbing First-choice (HC)
@@ -305,15 +334,32 @@ def hc(arr, source, destination, heuristic):
   # TODO
 
   path = []
-  visited = {}
+  visited = {source: 0}
+  curNode = source
+  while (True):
+    if (curNode == destination):
+      return True, outputPath(source, visited, goal)
+    getBetterNode = False
+    neighbors = [i for i, values in enumerate(arr[curNode])]
+    random.shuffle(neighbors)
+    for neighbor in neighbors:
+      if (arr[curNode][neighbor] != 0 and heuristic[neighbor] <  heuristic[curNode] and neighbor not in visited):
+        visited[neighbor] = curNode
+        curNode = neighbor 
+        print(curNode)
+        getBetterNode = True
+        break
+    if getBetterNode == False:
+      break
+  return False, []
 
-  return visited, path
+
 
 def readInput(filename):
   f = open(filename, 'r')
   rawData = f.read().split('\n')
   num = int(rawData[0])
-  rawData[ : ] = [rawData[i].split() for i in range(0, num + 2)]
+  rawData[ : ] = [rawData[i].split() for i in range(0, num + 3)]
   source, goal = rawData[1]
   source = int(source)
   goal = int(goal)
@@ -324,7 +370,7 @@ def readInput(filename):
     arr[i] = list(map(lambda x: int(x), arr[i]))
 
   heuristic = [] 
-  heuristic[:] = [int(h) for h in rawData[num]]
+  heuristic[:] = [int(h) for h in rawData[num + 2]]
   return num, source, goal, arr, heuristic
   
 
@@ -341,6 +387,9 @@ if __name__ == "__main__":
   print(ucs(arr, source, goal))
   print(dls(arr, source, goal, 2))
   print(ids(arr, source, goal, 10))
+  print(gbfs(arr, source, goal, heuristic))
+  print(astar(arr, source, goal, heuristic))
+  print(hc(arr, source, goal, heuristic))
   # TODO: Stop measuring 
 
   # TODO: Show the output data
