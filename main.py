@@ -123,14 +123,18 @@ def ucs(arr, source, destination):
   visited = {}
   pqueue.append((0, source))
   cost_min = {source : 0}
+  close = set()
   while(pqueue):
     pqueue = sorted(pqueue)
+    print(pqueue)
     value, curNode = pqueue.pop(0)
+    close.add(curNode)
+    # _, queue = zip(*pqueue)
     if (curNode == destination):
       return True, outputPath(source, visited, destination)
     for neighbor in range(len((arr[curNode]))):
       curCost = arr[curNode][neighbor]
-      if (curCost > 0 and neighbor not in visited):
+      if (curCost > 0 and neighbor not in close):
         newCost = curCost + value
         if (neighbor not in cost_min or newCost < cost_min[neighbor]):
           # update
@@ -245,16 +249,16 @@ def gbfs(arr, source, destination, heuristic):
   pqueue = [] 
   path = []
   visited = {source : 0}
-  print(heuristic)
   pqueue.append((heuristic[source], source))
+  close = set()
   while(pqueue):
     pqueue = sorted(pqueue)
-    print(pqueue)
     value, curNode = pqueue.pop(0)
+    close.add(curNode)
     if (curNode == destination):
       return True, outputPath(source, visited, destination)
     for neighbor in range(len(arr[curNode])):
-      if (arr[curNode][neighbor] != 0 and neighbor not in visited):
+      if (arr[curNode][neighbor] != 0 and neighbor not in close):
         pqueue.append((heuristic[neighbor], neighbor))
         visited[neighbor] = curNode
   return False, []
@@ -288,20 +292,21 @@ def astar(arr, source, destination, heuristic):
   visited = {source : 0}
   cost_min = {source: 0}
   pqueue = [(heuristic[source], source)]
+  close = set()
   while(pqueue):
     pqueue = sorted(pqueue)
+    _, queue = zip(*pqueue)
     curCost, curNode = pqueue.pop(0)
-    print(curNode)
+    if (curNode in close) : continue 
+    close.add(curNode)
     if (curNode == destination):
       return True, outputPath(source, visited, destination)
-    print(arr[curNode])
-    print(visited)
     for neighbor in range(len(arr[curNode])):
-      if (neighbor not in visited and arr[curNode][neighbor] != 0):
+      if (arr[curNode][neighbor] > 0 and neighbor not in close):
         newCost = curCost + arr[curNode][neighbor]
-        if (neighbor not in pqueue  or (newCost < cost_min[neighbor] and neighbor in pqueue)):
-          pqueue.append((arr[curNode][neighbor] + heuristic[neighbor], neighbor))
+        if (neighbor not in cost_min or newCost < cost_min[neighbor]):  
           cost_min[neighbor] = newCost
+          pqueue.append((newCost + heuristic[neighbor], neighbor))
           visited[neighbor] = curNode
   return False, []
 
