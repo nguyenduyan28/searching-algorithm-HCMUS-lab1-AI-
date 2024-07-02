@@ -1,23 +1,22 @@
-# TODO: Import libraries
-import heapq 
-import time
 import tracemalloc
+import time
+import heapq 
 import random
 from collections import deque, defaultdict
-# 1. Search Strategies Implementation
-# 1.1. Breadth-first search (BFS)
-def myfunc(a):
-    return a & (a & 1)
+
+# Helper function to output the path
 def outputPath(source, visited, goal):
   path = []
-  while (goal != source):
+  while goal != source:
     path.append(goal)
+    # path.append(" -> ")
     goal = visited[goal]
   path.append(source)
   path.reverse()
-  return path
 
+  return ' -> '.join(map(str, path))
 
+# 1.1. Breadth-first search (BFS)
 def bfs(arr, source, destination):
   """
   BFS algorithm:
@@ -38,23 +37,20 @@ def bfs(arr, source, destination):
   path: list
       Founded path
   """
-  # TODO
-  'arr[i][j] = path from i -- j'
   path = []
   visited = {}
-  queue = []
-  queue.append(source)
-  while (queue):
-    curNode = queue.pop(0)
+  queue = deque([source])
+  visited[source] = None  # Mark the source as visited
+  while queue:
+    curNode = queue.popleft()
     path.append(curNode)
-    if (curNode == destination):
-      return True, outputPath(source, visited, destination)
+    if curNode == destination:
+      return  outputPath(source, visited, destination)
     for i in range(len(arr[curNode])):
-      if (i not in visited and arr[curNode][i] !=  0):
+      if arr[curNode][i] != 0 and i not in visited:
         queue.append(i)
         visited[i] = curNode
-  return -1, []
-
+  return -1
 
 # 1.2. Depth-first search (DFS)
 def dfs(arr, source, destination):
@@ -77,24 +73,20 @@ def dfs(arr, source, destination):
   path: list
       Founded path
   """
-  # TODO
-
   path = []
   visited = {}
-  stack = []
-  stack.append(source)
-  while (stack):
+  stack = [source]
+  visited[source] = None  # Mark the source as visited
+  while stack:
     curNode = stack.pop()
     path.append(curNode)
-    if (curNode == destination):
-      return True, outputPath(source, visited, destination)
+    if curNode == destination:
+      return  outputPath(source, visited, destination)
     for i in range(len(arr[curNode])):
-      if (i not in visited and arr[curNode][i] !=  0):
+      if arr[curNode][i] != 0 and i not in visited:
         stack.append(i)
         visited[i] = curNode
-  return -1, []
-
-
+  return -1
 
 # 1.3. Uniform-cost search (UCS)
 def ucs(arr, source, destination):
@@ -117,110 +109,51 @@ def ucs(arr, source, destination):
   path: list
       Founded path
   """
-  # TODO
   pqueue = []
-  path = []
   visited = {}
-  pqueue.append((0, source))
-  cost_min = {source : 0}
+  heapq.heappush(pqueue, (0, source))
+  cost_min = {source: 0}
   close = set()
-  while(pqueue):
-    pqueue = sorted(pqueue)
-    print(pqueue)
-    value, curNode = pqueue.pop(0)
+  while pqueue:
+    value, curNode = heapq.heappop(pqueue)
+    if curNode in close:
+      continue
     close.add(curNode)
-    # _, queue = zip(*pqueue)
-    if (curNode == destination):
-      return True, outputPath(source, visited, destination)
-    for neighbor in range(len((arr[curNode]))):
+    if curNode == destination:
+      return outputPath(source, visited, destination)
+    for neighbor in range(len(arr[curNode])):
       curCost = arr[curNode][neighbor]
-      if (curCost > 0 and neighbor not in close):
+      if curCost > 0 and neighbor not in close:
         newCost = curCost + value
-        if (neighbor not in cost_min or newCost < cost_min[neighbor]):
-          # update
+        if neighbor not in cost_min or newCost < cost_min[neighbor]:
           cost_min[neighbor] = newCost
-          pqueue.append((newCost, neighbor))
+          heapq.heappush(pqueue, (newCost, neighbor))
           visited[neighbor] = curNode
-
-  return -1, []
-
-
-# 1.4. Iterative deepening search (IDS)
-# 1.4.a. Depth-limited search
+  return -1
+# 1.4.a Depth-limited search (DLS)
 def dls(arr, source, destination, depth_limit):
-  """
-  DLS algorithm:
-  Parameters:
-  ---------------------------
-  arr: list / numpy array 
-      The graph's adjacency matrix
-  source: integer
-      Starting node
-  destination: integer
-      Ending node
-  depth_limit: integer
-      Maximum depth for search
-  
-  Returns
-  ---------------------
-  visited: dictionary
-      The dictionary contains visited nodes, each key is a visited node,
-      each value is the adjacent node visited before it.
-  path: list
-      Founded path
-  """
-  # TODO
+  def recursive_dls(node, goal, limit, visited, path):
+    if limit == 0:
+      return False, path
+    if node == goal:
+      return True, path
+    visited.add(node)
+    for neighbor in range(len(arr[node])):
+      if arr[node][neighbor] != 0 and neighbor not in visited:
+        found, result = recursive_dls(neighbor, goal, limit - 1, visited, path + [neighbor])
+        if found:
+          return True, result
+    return False, path
 
-  path = []
-  visited = {}
-  stack = []
-  stack.append((0, source))
-  depth = 0
-  while (stack):
-    if (depth <= depth_limit):
-      value,  curNode = stack.pop()
-      if (curNode == destination):
-       return True,  outputPath(source, visited, destination)
-      for neighbor in range(len(arr[curNode])):
-        if (arr[curNode][neighbor] != 0 and neighbor not in visited):
-          stack.append((arr[curNode][neighbor], neighbor))
-          visited[neighbor] = curNode
-      depth += 1
-    else:
-      return False, []
-  
-  return False, []
-
+  return recursive_dls(source, destination, depth_limit, set(), [source])
 
 # 1.4.b. IDS
 def ids(arr, source, destination, depth_limit):
-  """
-  IDS algorithm:
-  Parameters:
-  ---------------------------
-  arr: list / numpy array 
-      The graph's adjacency matrix
-  source: integer
-      Starting node
-  destination: integer
-      Ending node
-  
-  Returns
-  ---------------------
-  visited: dictionary
-      The dictionary contains visited nodes, each key is a visited node,
-      each value is the adjacent node visited before it.
-  path: list
-      Founded path
-  """
-  # TODO
-
-  path = []
-  visited = {}
   for limit in range(depth_limit):
-    if (dls(arr, source, destination, limit)[0] == True):
-      return dls(arr, source, destination, limit)
-  return False, []
+    found, path = dls(arr, source, destination, limit)
+    if found:
+      return  path
+  return -1
 
 # 1.5. Greedy best first search (GBFS)
 def gbfs(arr, source, destination, heuristic):
@@ -245,24 +178,22 @@ def gbfs(arr, source, destination, heuristic):
   path: list
       Founded path
   """
-  # TODO
-  pqueue = [] 
-  path = []
-  visited = {source : 0}
-  pqueue.append((heuristic[source], source))
+  pqueue = []
+  visited = {}
+  heapq.heappush(pqueue, (heuristic[source], source))
   close = set()
-  while(pqueue):
-    pqueue = sorted(pqueue)
-    value, curNode = pqueue.pop(0)
+  while pqueue:
+    _, curNode = heapq.heappop(pqueue)
+    if curNode in close:
+      continue
     close.add(curNode)
-    if (curNode == destination):
-      return True, outputPath(source, visited, destination)
+    if curNode == destination:
+      return  outputPath(source, visited, destination)
     for neighbor in range(len(arr[curNode])):
-      if (arr[curNode][neighbor] != 0 and neighbor not in close):
-        pqueue.append((heuristic[neighbor], neighbor))
+      if arr[curNode][neighbor] != 0 and neighbor not in close:
+        heapq.heappush(pqueue, (heuristic[neighbor], neighbor))
         visited[neighbor] = curNode
-  return False, []
-
+  return -1
 # 1.6. Graph-search A* (AStar)
 def astar(arr, source, destination, heuristic):
   """
@@ -286,32 +217,26 @@ def astar(arr, source, destination, heuristic):
   path: list
       Founded path
   """
-  # TODO
-
-  path = []
-  visited = {source : 0}
+  pqueue = []
+  visited = {source: 0}
   cost_min = {source: 0}
-  pqueue = [(heuristic[source], source)]
+  heapq.heappush(pqueue, (heuristic[source], source))
   close = set()
-  while(pqueue):
-    pqueue = sorted(pqueue)
-    _, queue = zip(*pqueue)
-    curCost, curNode = pqueue.pop(0)
-    if (curNode in close) : continue 
+  while pqueue:
+    curCost, curNode = heapq.heappop(pqueue)
+    if curNode in close:
+      continue
     close.add(curNode)
-    if (curNode == destination):
-      return True, outputPath(source, visited, destination)
+    if curNode == destination:
+      return  outputPath(source, visited, destination)
     for neighbor in range(len(arr[curNode])):
-      if (arr[curNode][neighbor] > 0 and neighbor not in close):
-        newCost = curCost + arr[curNode][neighbor]
-        if (neighbor not in cost_min or newCost < cost_min[neighbor]):  
+      if arr[curNode][neighbor] > 0 and neighbor not in close:
+        newCost = cost_min[curNode] + arr[curNode][neighbor]
+        if neighbor not in cost_min or newCost < cost_min[neighbor]:
           cost_min[neighbor] = newCost
-          pqueue.append((newCost + heuristic[neighbor], neighbor))
+          heapq.heappush(pqueue, (newCost + heuristic[neighbor], neighbor))
           visited[neighbor] = curNode
-  return False, []
-
-
-
+  return -1
 
 # 1.7. Hill-climbing First-choice (HC)
 def hc(arr, source, destination, heuristic):
@@ -336,48 +261,68 @@ def hc(arr, source, destination, heuristic):
   path: list
       Founded path
   """
-  # TODO
-
-  path = []
   visited = {source: 0}
   curNode = source
-  while (True):
-    if (curNode == destination):
-      return True, outputPath(source, visited, goal)
+  while True:
+    if curNode == destination:
+      return  outputPath(source, visited, destination)
     getBetterNode = False
     neighbors = [i for i, values in enumerate(arr[curNode])]
     random.shuffle(neighbors)
     for neighbor in neighbors:
-      if (arr[curNode][neighbor] != 0 and heuristic[neighbor] <  heuristic[curNode] and neighbor not in visited):
+      if arr[curNode][neighbor] != 0 and heuristic[neighbor] < heuristic[curNode] and neighbor not in visited:
         visited[neighbor] = curNode
-        curNode = neighbor 
-        print(curNode)
+        curNode = neighbor
         getBetterNode = True
         break
-    if getBetterNode == False:
+    if not getBetterNode:
       break
-  return False, []
-
-
+  return -1
 
 def readInput(filename):
   f = open(filename, 'r')
   rawData = f.read().split('\n')
   num = int(rawData[0])
-  rawData[ : ] = [rawData[i].split() for i in range(0, num + 3)]
-  source, goal = rawData[1]
-  source = int(source)
-  goal = int(goal)
-  arr = [[]]
-  # arr = list(map(list, rawData[2 : 2 + num]))
-  arr = list(map(list,  rawData[2: 2 + num]))
-  for i in range(0,len(arr)):
-    arr[i] = list(map(lambda x: int(x), arr[i]))
-
-  heuristic = [] 
-  heuristic[:] = [int(h) for h in rawData[num + 2]]
+  source, goal = map(int, rawData[1].split())
+  arr = [list(map(int, rawData[i].split())) for i in range(2, 2 + num)]
+  heuristic = list(map(int, rawData[2 + num].split()))
   return num, source, goal, arr, heuristic
-  
+
+
+
+def measure_performance(algorithm, arr, source, goal, heuristic=None, depth_limit=None):
+  tracemalloc.start()
+  start_time = time.time()
+
+  if algorithm == 'bfs':
+    path = bfs(arr, source, goal)
+  elif algorithm == 'dfs':
+    path = dfs(arr, source, goal)
+  elif algorithm == 'ucs':
+    path = ucs(arr, source, goal)
+  elif algorithm == 'dls':
+    found, path = dls(arr, source, goal, depth_limit)
+    if (found is False):
+      path = -1
+  elif algorithm == 'ids':
+    path = ids(arr, source, goal, depth_limit)
+  elif algorithm == 'gbfs':
+    path = gbfs(arr, source, goal, heuristic)
+  elif algorithm == 'astar':
+    path = astar(arr, source, goal, heuristic)
+  elif algorithm == 'hc':
+    path = hc(arr, source, goal, heuristic)
+  else:
+    path = None
+
+  end_time = time.time()
+  current, peak = tracemalloc.get_traced_memory()
+  tracemalloc.stop()
+
+  runtime = end_time - start_time
+  memory_usage = peak / 1024  # Convert to KB
+
+  return path, runtime, memory_usage
 
 
 
@@ -387,16 +332,23 @@ if __name__ == "__main__":
   num, source, goal,  arr, heuristic = readInput("input.txt")
   # TODO: Start measuring
   # TODO: Call a function to execute the path finding process
-  print(bfs(arr, source, goal))
-  print(dfs(arr, source, goal))
-  print(ucs(arr, source, goal))
-  print(dls(arr, source, goal, 2))
-  print(ids(arr, source, goal, 10))
-  print(gbfs(arr, source, goal, heuristic))
-  print(astar(arr, source, goal, heuristic))
-  print(hc(arr, source, goal, heuristic))
+
+  # Execute the path finding process
+  algorithms = ['bfs', 'dfs', 'ucs', 'dls', 'ids', 'gbfs', 'astar', 'hc']
+  for algorithm in algorithms:
+    path, runtime, memory = measure_performance(algorithm, arr, source, goal, heuristic, depth_limit=2)
+    print(f"{algorithm.upper()}")
+    print("Path: ", path)
+    print("Runtime: ", runtime)
+    print("Memory usage: ", memory, "KB")
+  # print("BFS:", bfs(arr, source, goal))
+  # print("DFS:", dfs(arr, source, goal))
+  # print("UCS:", ucs(arr, source, goal))
+  # print("DLS:", dls(arr, source, goal, 2))
+  # print("IDS:", ids(arr, source, goal, 10))
+  # print("GBFS:", gbfs(arr, source, goal, heuristic))
+  # print("AStar:", astar(arr, source, goal, heuristic))
+  # print("HC:", hc(arr, source, goal, heuristic))
   # TODO: Stop measuring 
 
   # TODO: Show the output data
-
-  pass
