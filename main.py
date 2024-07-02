@@ -132,29 +132,73 @@ def ucs(arr, source, destination):
   return -1
 # 1.4.a Depth-limited search (DLS)
 def dls(arr, source, destination, depth_limit):
-  def recursive_dls(node, goal, limit, visited, path):
-    if limit == 0:
-      return False, path
-    if node == goal:
-      return True, path
-    visited.add(node)
-    for neighbor in range(len(arr[node])):
-      if arr[node][neighbor] != 0 and neighbor not in visited:
-        found, result = recursive_dls(neighbor, goal, limit - 1, visited, path + [neighbor])
-        if found:
-          return True, result
-    return False, path
+  """
+  DLS algorithm:
+  Parameters:
+  ---------------------------
+  arr: list / numpy array 
+      The graph's adjacency matrix
+  source: integer
+      Starting node
+  destination: integer
+      Ending node
+  depth_limit: integer
+      Maximum depth for search
+  
+  Returns
+  ---------------------
+  visited: dictionary
+      The dictionary contains visited nodes, each key is a visited node,
+      each value is the adjacent node visited before it.
+  path: list
+      Founded path
+  """
+  path = []
+  visited = {source : 0}
+  stack = []
+  stack.append((source, 0))
+  while (stack):
+    curNode, curDepth = stack.pop()
+    if (curNode == destination):
+      return 1, outputPath(source, visited, destination)
+    if (curDepth >= depth_limit):
+      return 0, []
+    for neighbor in range(len(arr[curNode])):
+      if (arr[curNode][neighbor] != 0 and neighbor not in visited):
+        stack.append((neighbor, curDepth + 1))
+        visited[neighbor] = curNode
 
-  return recursive_dls(source, destination, depth_limit, set(), [source])
+  return -1, []
 
 # 1.4.b. IDS
 def ids(arr, source, destination, depth_limit):
+  """
+  IDS algorithm:
+  Parameters:
+  ---------------------------
+  arr: list / numpy array 
+      The graph's adjacency matrix
+  source: integer
+      Starting node
+  destination: integer
+      Ending node
+  
+  Returns
+  ---------------------
+  visited: dictionary
+      The dictionary contains visited nodes, each key is a visited node,
+      each value is the adjacent node visited before it.
+  path: list
+      Founded path
+  """
   for limit in range(depth_limit):
     found, path = dls(arr, source, destination, limit)
-    if found:
-      return  path
-  return -1
-
+    if found == 0:
+      continue
+    elif found == -1:
+      return -1
+    elif found == 1:
+      return path
 # 1.5. Greedy best first search (GBFS)
 def gbfs(arr, source, destination, heuristic):
   """
@@ -301,7 +345,7 @@ def measure_performance(algorithm, arr, source, goal, heuristic=None, depth_limi
   elif algorithm == 'ucs':
     path = ucs(arr, source, goal)
   elif algorithm == 'dls':
-    found, path = dls(arr, source, goal, depth_limit)
+    found, path = dls(arr, source, goal, 2)
     if (found is False):
       path = -1
   elif algorithm == 'ids':
@@ -336,7 +380,7 @@ if __name__ == "__main__":
   # Execute the path finding process
   algorithms = ['bfs', 'dfs', 'ucs', 'dls', 'ids', 'gbfs', 'astar', 'hc']
   for algorithm in algorithms:
-    path, runtime, memory = measure_performance(algorithm, arr, source, goal, heuristic, depth_limit=2)
+    path, runtime, memory = measure_performance(algorithm, arr, source, goal, heuristic, depth_limit=99)
     print(f"{algorithm.upper()}")
     print("Path: ", path)
     print("Runtime: ", runtime)
