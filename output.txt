@@ -1,0 +1,80 @@
+BFS
+Path: 0 -> 1 -> 2 -> 3 -> 7
+Runtime: 8.296966552734375e-05
+Memory usage: 2.40625KB
+
+DFS
+Path: 0 -> 4 -> 5 -> 6 -> 7
+Runtime: 6.031990051269531e-05
+Memory usage: 1.3828125KB
+
+UCS
+Path: 0 -> 4 -> 5 -> 6 -> 7
+Runtime: 0.00020384788513183594
+Memory usage: 2.3671875KB
+
+DLS
+Path: []
+Runtime: 5.1021575927734375e-05
+Memory usage: 0.625KB
+
+IDS
+Path: 0 -> 4 -> 5 -> 6 -> 7
+Runtime: 0.00019598007202148438
+Memory usage: 1.375KB
+
+GBFS
+Path: 0 -> 4 -> 5 -> 6 -> 7
+Runtime: 7.414817810058594e-05
+Memory usage: 2.0625KB
+
+ASTAR
+Path: 0 -> 4 -> 5 -> 6 -> 7
+Runtime: 0.00012373924255371094
+Memory usage: 2.375KB
+
+HC
+Path: 0 -> 4 -> 5 -> 6 -> 7
+Runtime: 0.000186920166015625
+Memory usage: 2.3984375KB
+
+BFS
+Path: 0 -> 1 -> 2 -> 3 -> 7
+Runtime: 8.296966552734375e-05
+Memory usage: 2.40625KB
+
+DFS
+Path: 0 -> 4 -> 5 -> 6 -> 7
+Runtime: 8.606910705566406e-05
+Memory usage: 1.3828125KB
+
+UCS
+Path: 0 -> 4 -> 5 -> 6 -> 7
+Runtime: 0.00012922286987304688
+Memory usage: 2.3671875KB
+
+DLS
+Path: -1
+Runtime: 8.916854858398438e-05
+Memory usage: 0.625KB
+
+IDS
+Path: 0 -> 4 -> 5 -> 6 -> 7
+Runtime: 0.00019288063049316406
+Memory usage: 1.375KB
+
+GBFS
+Path: 0 -> 4 -> 5 -> 6 -> 7
+Runtime: 0.00012803077697753906
+Memory usage: 2.0625KB
+
+ASTAR
+Path: 0 -> 4 -> 5 -> 6 -> 7
+Runtime: 0.00013899803161621094
+Memory usage: 2.375KB
+
+HC
+Path: 0 -> 4 -> 5 -> 6 -> 7
+Runtime: 0.00033593177795410156
+Memory usage: 2.3984375KB
+

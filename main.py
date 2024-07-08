@@ -346,7 +346,7 @@ def measure_performance(algorithm, arr, source, goal, heuristic=None, depth_limi
     path = ucs(arr, source, goal)
   elif algorithm == 'dls':
     found, path = dls(arr, source, goal, 2)
-    if (found is False):
+    if (path == []):
       path = -1
   elif algorithm == 'ids':
     path = ids(arr, source, goal, depth_limit)
@@ -368,23 +368,35 @@ def measure_performance(algorithm, arr, source, goal, heuristic=None, depth_limi
 
   return path, runtime, memory_usage
 
-
+def writeOutput(filename, ans):
+  e = open(filename, "w")
+  e.write(ans)
 
 # 2. Main function
 if __name__ == "__main__":
   # TODO: Read the input data
-  num, source, goal,  arr, heuristic = readInput("input.txt")
-  # TODO: Start measuring
-  # TODO: Call a function to execute the path finding process
+  numOfinput = 5
+  for i in range(numOfinput):
+    num, source, goal,  arr, heuristic = readInput(f"input.txt")
+    # TODO: Start measuring
+    # TODO: Call a function to execute the path finding process
 
-  # Execute the path finding process
-  algorithms = ['bfs', 'dfs', 'ucs', 'dls', 'ids', 'gbfs', 'astar', 'hc']
-  for algorithm in algorithms:
-    path, runtime, memory = measure_performance(algorithm, arr, source, goal, heuristic, depth_limit=99)
-    print(f"{algorithm.upper()}")
-    print("Path: ", path)
-    print("Runtime: ", runtime)
-    print("Memory usage: ", memory, "KB")
+    # Execute the path finding process
+    algorithms = ['bfs', 'dfs', 'ucs', 'dls', 'ids', 'gbfs', 'astar', 'hc']
+    ans = ""
+    for algorithm in algorithms:
+      numOfRest = len(algorithms) - algorithms.index(algorithm) - 1 
+      path, runtime, memory = measure_performance(algorithm, arr, source, goal, heuristic, depth_limit=99)
+      algorithm = algorithm.upper()
+      ans += str(algorithm + "\n")
+      ans += ("Path: " +  str(path) + "\n")
+      ans += ("Runtime: " +  str(runtime) + "\n")
+      ans += ("Memory usage: " +  str(memory) + "KB" + "\n\n")
+    writeOutput((f"output{i + 1}.txt"), ans)
+      # print(f"{algorithm.upper()}")
+      # print("Path: ", path)
+      # print("Runtime: ", runtime)
+      # print("Memory usage: ", memory, "KB")
   # print("BFS:", bfs(arr, source, goal))
   # print("DFS:", dfs(arr, source, goal))
   # print("UCS:", ucs(arr, source, goal))

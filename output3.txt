@@ -1,0 +1,40 @@
+BFS
+Path: 0 -> 1 -> 2 -> 3 -> 7
+Runtime: 9.107589721679688e-05
+Memory usage: 0.9765625KB
+
+DFS
+Path: 0 -> 4 -> 5 -> 6 -> 7
+Runtime: 4.315376281738281e-05
+Memory usage: 0.9140625KB
+
+UCS
+Path: 0 -> 4 -> 5 -> 6 -> 7
+Runtime: 7.295608520507812e-05
+Memory usage: 1.8515625KB
+
+DLS
+Path: -1
+Runtime: 2.002716064453125e-05
+Memory usage: 0.125KB
+
+IDS
+Path: 0 -> 4 -> 5 -> 6 -> 7
+Runtime: 9.703636169433594e-05
+Memory usage: 0.8984375KB
+
+GBFS
+Path: 0 -> 4 -> 5 -> 6 -> 7
+Runtime: 5.0067901611328125e-05
+Memory usage: 1.5625KB
+
+ASTAR
+Path: 0 -> 4 -> 5 -> 6 -> 7
+Runtime: 5.412101745605469e-05
+Memory usage: 1.8515625KB
+
+HC
+Path: 0 -> 4 -> 5 -> 6 -> 7
+Runtime: 9.703636169433594e-05
+Memory usage: 0.59375KB
+
