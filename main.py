@@ -2,9 +2,8 @@ import tracemalloc
 import time
 import heapq 
 import random
-from collections import deque, defaultdict
+from collections import deque
 
-# Helper function to output the path
 def outputPath(source, visited, goal):
   path = []
   while goal != source:
@@ -44,12 +43,12 @@ def bfs(arr, source, destination):
   while queue:
     curNode = queue.popleft()
     path.append(curNode)
-    if curNode == destination:
-      return  outputPath(source, visited, destination)
     for i in range(len(arr[curNode])):
       if arr[curNode][i] != 0 and i not in visited:
         queue.append(i)
         visited[i] = curNode
+        if (i == destination):
+          return outputPath(source, visited, destination)
   return -1
 
 # 1.2. Depth-first search (DFS)
@@ -80,12 +79,12 @@ def dfs(arr, source, destination):
   while stack:
     curNode = stack.pop()
     path.append(curNode)
-    if curNode == destination:
-      return  outputPath(source, visited, destination)
     for i in range(len(arr[curNode])):
       if arr[curNode][i] != 0 and i not in visited:
         stack.append(i)
         visited[i] = curNode
+        if (i == destination):
+          return outputPath(source, visited, destination)
   return -1
 
 # 1.3. Uniform-cost search (UCS)
@@ -119,8 +118,7 @@ def ucs(arr, source, destination):
     if curNode in close:
       continue
     close.add(curNode)
-    if curNode == destination:
-      return outputPath(source, visited, destination)
+    #expanding node
     for neighbor in range(len(arr[curNode])):
       curCost = arr[curNode][neighbor]
       if curCost > 0 and neighbor not in close:
@@ -129,6 +127,8 @@ def ucs(arr, source, destination):
           cost_min[neighbor] = newCost
           heapq.heappush(pqueue, (newCost, neighbor))
           visited[neighbor] = curNode
+    if curNode == destination:
+      return outputPath(source, visited, destination)
   return -1
 # 1.4.a Depth-limited search (DLS)
 def dls(arr, source, destination, depth_limit):
@@ -237,6 +237,8 @@ def gbfs(arr, source, destination, heuristic):
       if arr[curNode][neighbor] != 0 and neighbor not in close:
         heapq.heappush(pqueue, (heuristic[neighbor], neighbor))
         visited[neighbor] = curNode
+        if (neighbor == destination):
+          return outputPath(source, visited, destination)
   return -1
 # 1.6. Graph-search A* (AStar)
 def astar(arr, source, destination, heuristic):
@@ -271,8 +273,7 @@ def astar(arr, source, destination, heuristic):
     if curNode in close:
       continue
     close.add(curNode)
-    if curNode == destination:
-      return  outputPath(source, visited, destination)
+    # expanding node
     for neighbor in range(len(arr[curNode])):
       if arr[curNode][neighbor] > 0 and neighbor not in close:
         newCost = cost_min[curNode] + arr[curNode][neighbor]
@@ -280,6 +281,8 @@ def astar(arr, source, destination, heuristic):
           cost_min[neighbor] = newCost
           heapq.heappush(pqueue, (newCost + heuristic[neighbor], neighbor))
           visited[neighbor] = curNode
+    if curNode == destination:
+      return  outputPath(source, visited, destination)
   return -1
 
 # 1.7. Hill-climbing First-choice (HC)
@@ -337,7 +340,6 @@ def readInput(filename):
 def measure_performance(algorithm, arr, source, goal, heuristic=None, depth_limit=None):
   tracemalloc.start()
   start_time = time.time()
-
   if algorithm == 'bfs':
     path = bfs(arr, source, goal)
   elif algorithm == 'dfs':
@@ -377,7 +379,7 @@ if __name__ == "__main__":
   # TODO: Read the input data
   numOfinput = 5
   for i in range(numOfinput):
-    num, source, goal,  arr, heuristic = readInput(f"input.txt")
+    num, source, goal,  arr, heuristic = readInput(f"input{i + 1}.txt")
     # TODO: Start measuring
     # TODO: Call a function to execute the path finding process
 
