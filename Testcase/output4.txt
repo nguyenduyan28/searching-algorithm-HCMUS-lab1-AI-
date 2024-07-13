@@ -1,40 +1,40 @@
 BFS
 Path: 0 -> 1 -> 2 -> 3
-Runtime: 5.1021575927734375e-05
+Runtime: 4.124641418457031e-05
 Memory usage: 0.6171875KB
 
 DFS
 Path: 0 -> 1 -> 2 -> 3
-Runtime: 3.4809112548828125e-05
+Runtime: 2.9802322387695312e-05
 Memory usage: 0.53125KB
 
 UCS
 Path: 0 -> 1 -> 2 -> 3
-Runtime: 4.982948303222656e-05
+Runtime: 4.1961669921875e-05
 Memory usage: 0.65625KB
 
 DLS
 Path: -1
-Runtime: 2.288818359375e-05
+Runtime: 1.8835067749023438e-05
 Memory usage: 0.09375KB
 
 IDS
 Path: 0 -> 1 -> 2 -> 3
-Runtime: 7.510185241699219e-05
+Runtime: 6.699562072753906e-05
 Memory usage: 0.4921875KB
 
 GBFS
 Path: 0 -> 1 -> 2 -> 3
-Runtime: 4.124641418457031e-05
+Runtime: 3.600120544433594e-05
 Memory usage: 0.734375KB
 
 ASTAR
 Path: 0 -> 1 -> 2 -> 3
-Runtime: 4.601478576660156e-05
+Runtime: 3.981590270996094e-05
 Memory usage: 0.65625KB
 
 HC
 Path: -1
-Runtime: 2.574920654296875e-05
+Runtime: 2.09808349609375e-05
 Memory usage: 0.2734375KB
 

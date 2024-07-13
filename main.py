@@ -12,7 +12,6 @@ def outputPath(source, visited, goal):
     goal = visited[goal]
   path.append(source)
   path.reverse()
-
   return ' -> '.join(map(str, path))
 
 # 1.1. Breadth-first search (BFS)
@@ -36,13 +35,11 @@ def bfs(arr, source, destination):
   path: list
       Founded path
   """
-  path = []
   visited = {}
   queue = deque([source])
   visited[source] = None  # Mark the source as visited
   while queue:
     curNode = queue.popleft()
-    path.append(curNode)
     for i in range(len(arr[curNode])):
       if arr[curNode][i] != 0 and i not in visited:
         queue.append(i)
@@ -379,7 +376,7 @@ if __name__ == "__main__":
   # TODO: Read the input data
   numOfinput = 5
   for i in range(numOfinput):
-    num, source, goal,  arr, heuristic = readInput(f"input{i + 1}.txt")
+    num, source, goal,  arr, heuristic = readInput(f"Testcase/input{i + 1}.txt")
     # TODO: Start measuring
     # TODO: Call a function to execute the path finding process
 
@@ -394,7 +391,7 @@ if __name__ == "__main__":
       ans += ("Path: " +  str(path) + "\n")
       ans += ("Runtime: " +  str(runtime) + "\n")
       ans += ("Memory usage: " +  str(memory) + "KB" + "\n\n")
-    writeOutput((f"output{i + 1}.txt"), ans)
+    writeOutput((f"Testcase/output{i + 1}.txt"), ans)
       # print(f"{algorithm.upper()}")
       # print("Path: ", path)
       # print("Runtime: ", runtime)
