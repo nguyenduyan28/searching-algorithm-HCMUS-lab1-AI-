@@ -14,6 +14,8 @@ def outputPath(source, visited, goal):
   path.reverse()
   return ' -> '.join(map(str, path))
 
+def main():
+  pass
 # 1.1. Breadth-first search (BFS)
 def bfs(arr, source, destination):
   """
@@ -150,22 +152,22 @@ def dls(arr, source, destination, depth_limit):
   path: list
       Founded path
   """
+
   path = []
   visited = {source : 0}
   stack = []
   stack.append((source, 0))
-  while (stack):
+  while stack:
     curNode, curDepth = stack.pop()
-    if (curNode == destination):
+    if curNode == destination:
       return 1, outputPath(source, visited, destination)
-    if (curDepth >= depth_limit):
-      return 0, []
-    for neighbor in range(len(arr[curNode])):
-      if (arr[curNode][neighbor] != 0 and neighbor not in visited):
-        stack.append((neighbor, curDepth + 1))
-        visited[neighbor] = curNode
-
+    if curDepth < depth_limit:
+      for neighbor in range(len(arr[curNode])):
+        if arr[curNode][neighbor] != 0 and neighbor not in visited:
+          stack.append((neighbor, curDepth + 1))
+          visited[neighbor] = curNode
   return -1, []
+
 
 # 1.4.b. IDS
 def ids(arr, source, destination, depth_limit):
@@ -188,14 +190,12 @@ def ids(arr, source, destination, depth_limit):
   path: list
       Founded path
   """
+
   for limit in range(depth_limit):
     found, path = dls(arr, source, destination, limit)
-    if found == 0:
-      continue
-    elif found == -1:
-      return -1
-    elif found == 1:
+    if found == 1:
       return path
+  return -1
 # 1.5. Greedy best first search (GBFS)
 def gbfs(arr, source, destination, heuristic):
   """
@@ -392,18 +392,6 @@ if __name__ == "__main__":
       ans += ("Runtime: " +  str(runtime) + "\n")
       ans += ("Memory usage: " +  str(memory) + "KB" + "\n\n")
     writeOutput((f"Testcase/output{i + 1}.txt"), ans)
-      # print(f"{algorithm.upper()}")
-      # print("Path: ", path)
-      # print("Runtime: ", runtime)
-      # print("Memory usage: ", memory, "KB")
-  # print("BFS:", bfs(arr, source, goal))
-  # print("DFS:", dfs(arr, source, goal))
-  # print("UCS:", ucs(arr, source, goal))
-  # print("DLS:", dls(arr, source, goal, 2))
-  # print("IDS:", ids(arr, source, goal, 10))
-  # print("GBFS:", gbfs(arr, source, goal, heuristic))
-  # print("AStar:", astar(arr, source, goal, heuristic))
-  # print("HC:", hc(arr, source, goal, heuristic))
   # TODO: Stop measuring 
 
   # TODO: Show the output data
